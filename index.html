@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRAGVYBE | Tu esencia, tu flow</title>
+    
+    <!-- Fuentes Google: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- CDNs: FontAwesome, SweetAlert2, Canvas Confetti -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <style>
+        :root {
+            --bg-primary: #05070e;
+            --bg-secondary: #0b1120;
+            --bg-card: rgba(15, 23, 42, 0.75);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(56, 189, 248, 0.3);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            
+            /* Colores Neón & Acentos */
+            --accent-cyan: #00f0ff;
+            --accent-blue: #0284c7;
+            --accent-purple: #a855f7;
+            --accent-pink: #ec4899;
+            --accent-gold: #fbbf24;
+            
+            /* Glows */
+            --neon-cyan-glow: 0 0 15px rgba(0, 240, 255, 0.4);
+            --neon-purple-glow: 0 0 15px rgba(168, 85, 247, 0.4);
+            --neon-pink-glow: 0 0 15px rgba(236, 72, 153, 0.4);
+            --neon-gold-glow: 0 0 15px rgba(251, 191, 36, 0.4);
+            
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --font-main: 'Inter', sans-serif;
+            --font-title: 'Outfit', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-main);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.5;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.07) 0%, transparent 40%),
+                radial-gradient(circle at 85% 50%, rgba(168, 85, 247, 0.07) 0%, transparent 40%),
+                radial-gradient(circle at 50% 85%, rgba(236, 72, 153, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        /* Barra Superior Neón */
+        .top-bar {
+            background: linear-gradient(90deg, #0284c7 0%, #7c3aed 50%, #db2777 100%);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+            color: #ffffff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-align: center;
+            padding: 9px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .top-bar span {
+            background: rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(4px);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Navegación Glassmorphism */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(5, 7, 14, 0.82);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 16px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .nav-logo-img {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 1.5px solid var(--accent-cyan);
+            box-shadow: var(--neon-cyan-glow);
+        }
+
+        .brand-title {
+            font-family: var(--font-title);
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            color: var(--text-primary);
+        }
+
+        .brand-title span {
+            color: var(--accent-cyan);
+            text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-nav-action {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 9px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-nav-action:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: var(--neon-cyan-glow);
+            color: var(--accent-cyan);
+            transform: translateY(-1px);
+        }
+
+        .cart-badge {
+            background: var(--accent-cyan);
+            color: #05070e;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 10px;
+            box-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        /* Hero / Encabezado */
+        .hero-section {
+            padding: 60px 24px 35px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 240, 255, 0.08);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 7px 18px;
+            border-radius: 30px;
+            margin-bottom: 22px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-title {
+            font-family: var(--font-title);
+            font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+            font-weight: 800;
+            line-height: 1.12;
+            margin-bottom: 18px;
+            background: linear-gradient(135deg, #ffffff 30%, var(--accent-cyan) 75%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+        }
+
+        .hero-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 650px;
+            margin: 0 auto 35px;
+        }
+
+        /* Tarjetas de Concentración Neón Technical */
+        .concentrations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 18px;
+            max-width: 1200px;
+            margin: 0 auto 45px;
+            padding: 0 24px;
+        }
+
+        .conc-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 22px;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .conc-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+            opacity: 0.4;
+        }
+
+        .conc-card:nth-child(1):hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 10px 30px -5px rgba(0, 240, 255, 0.25);
+            transform: translateY(-5px);
+        }
+
+        .conc-card:nth-child(2) .conc-tag { color: var(--accent-purple); }
+        .conc-card:nth-child(2) .conc-bar-fill { background: linear-gradient(90deg, #6366f1, var(--accent-purple)); }
+        .conc-card:nth-child(2):hover {
+            border-color: var(--accent-purple);
+            box-shadow: 0 10px 30px -5px rgba(168, 85, 247, 0.25);
+            transform: translateY(-5px);
+        }
+
+        .conc-card:nth-child(3) .conc-tag { color: var(--accent-pink); }
+        .conc-card:nth-child(3) .conc-bar-fill { background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink)); }
+        .conc-card:nth-child(3):hover {
+            border-color: var(--accent-pink);
+            box-shadow: 0 10px 30px -5px rgba(236, 72, 153, 0.25);
+            transform: translateY(-5px);
+        }
+
+        .conc-card:nth-child(4) {
+            border-color: rgba(251, 191, 36, 0.3);
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.85), rgba(30, 27, 75, 0.4));
+        }
+        .conc-card:nth-child(4) .conc-tag { color: var(--accent-gold); text-shadow: 0 0 8px rgba(251, 191, 36, 0.5); }
+        .conc-card:nth-child(4) .conc-bar-fill { background: linear-gradient(90deg, #f59e0b, var(--accent-gold)); }
+        .conc-card:nth-child(4):hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 10px 30px -5px rgba(251, 191, 36, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .conc-tag {
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            margin-bottom: 6px;
+        }
+
+        .conc-name {
+            font-family: var(--font-title);
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .conc-price {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .conc-bar-bg {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .conc-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+            border-radius: 10px;
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        .conc-desc {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+
+        /* Buscador y Filtros */
+        .controls-section {
+            max-width: 1200px;
+            margin: 0 auto 35px;
+            padding: 0 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-cyan);
+            font-size: 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            padding: 15px 18px 15px 48px;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
+            background: rgba(15, 23, 42, 0.85);
+        }
+
+        .filter-pills {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+        }
+
+        .filter-pills::-webkit-scrollbar {
+            display: none;
+        }
+
+        .pill-btn {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            padding: 9px 20px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pill-btn.active, .pill-btn:hover {
+            background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
+            color: #05070e;
+            border-color: var(--accent-cyan);
+            font-weight: 800;
+            box-shadow: 0 0 18px rgba(0, 240, 255, 0.4);
+        }
+
+        /* Catálogo Grid Neón Glass */
+        .catalog-grid {
+            max-width: 1200px;
+            margin: 0 auto 80px;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 22px;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transition: 0.5s;
+        }
+
+        .product-card:hover::after {
+            left: 100%;
+        }
+
+        .product-card:hover {
+            border-color: rgba(0, 240, 255, 0.4);
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 240, 255, 0.15);
+        }
+
+        .card-brand {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+            margin-bottom: 6px;
+        }
+
+        .card-name {
+            font-family: var(--font-title);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .card-notes {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 2.5em;
+        }
+
+        .card-selector {
+            margin-bottom: 18px;
+        }
+
+        .selector-label {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            display: block;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .select-custom {
+            width: 100%;
+            background: #090e1a;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 9px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            outline: none;
+            cursor: pointer;
+            transition: border 0.2s ease;
+        }
+
+        .select-custom:focus {
+            border-color: var(--accent-cyan);
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .card-price {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .btn-add-cart {
+            background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
+            color: #05070e;
+            border: none;
+            padding: 10px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
+        }
+
+        .btn-add-cart:hover {
+            transform: scale(1.04);
+            box-shadow: 0 0 22px rgba(0, 240, 255, 0.5);
+        }
+
+        /* Modales & Glassmorphism */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-container {
+            background: rgba(11, 17, 32, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 240, 255, 0.15);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--accent-cyan);
+        }
+
+        .modal-title {
+            font-family: var(--font-title);
+            font-size: 1.45rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(5, 7, 14, 0.7);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
+            color: #05070e;
+            border: none;
+            padding: 13px;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        }
+
+        .btn-submit:hover {
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+            transform: translateY(-1px);
+        }
+
+        /* Cart Drawer Glassmorphism */
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            background: rgba(11, 17, 32, 0.96);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(0, 240, 255, 0.2);
+            z-index: 250;
+            transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 26px;
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .cart-drawer.active {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .cart-items-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .cart-item {
+            background: rgba(5, 7, 14, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-item-title {
+            font-weight: 700;
+            font-size: 0.92rem;
+        }
+
+        .cart-item-meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .cart-footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 18px;
+        }
+
+        .coupon-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .btn-whatsapp {
+            width: 100%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 0 18px rgba(34, 197, 94, 0.35);
+            transition: all 0.3s ease;
+        }
+
+        .btn-whatsapp:hover {
+            box-shadow: 0 0 28px rgba(34, 197, 94, 0.6);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Top Announcement Bar Animada -->
+<div class="top-bar" style="overflow: hidden; white-space: nowrap; background: linear-gradient(90deg, #38bdf8, #818cf8, #f472b6); padding: 8px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+    <div style="display: inline-block; white-space: nowrap; animation: marqueeBar 22s linear infinite;">
+        <span style="display: inline-flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 700; color: #000000; padding-right: 50px;">
+            <span style="background: rgba(0, 0, 0, 0.12); padding: 2px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #000000;">ENVÍOS sv</span>
+            Envíos a todo El Salvador por $2.50 &nbsp;•&nbsp; Entregas de 24 a 36 hrs 🎁 &nbsp;•&nbsp; <b>¡Crea tu cuenta y recibe un código de descuento en tu primer pedido! 🎉</b>
+        </span>
+        <span style="display: inline-flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 700; color: #000000; padding-right: 50px;">
+            <span style="background: rgba(0, 0, 0, 0.12); padding: 2px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #000000;">ENVÍOS sv</span>
+            Envíos a todo El Salvador por $2.50 &nbsp;•&nbsp; Entregas de 24 a 36 hrs 🎁 &nbsp;•&nbsp; <b>¡Crea tu cuenta y recibe un código de descuento en tu primer pedido! 🎉</b>
+        </span>
+    </div>
+</div>
+
+<style>
+@keyframes marqueeBar {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+}
+</style>
+</style>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="#" class="nav-brand">
+            <img src="image_d95248.jpg" alt="FRAGVYBE Logo" class="nav-logo-img" onerror="this.style.display='none'">
+            <span class="brand-title">FRAG<span>VYBE</span></span>
+        </a>
+
+        <div class="nav-actions">
+            <button class="btn-nav-action" id="userBtn" onclick="openUserModal()">
+                <i class="fa-regular fa-user"></i>
+                <span id="userBtnText">Mi Cuenta</span>
+            </button>
+            <button class="btn-nav-action" onclick="toggleCart()">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span class="cart-badge" id="cartCount">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="hero-pill">
+            <i class="fa-solid fa-flask"></i> Frascos Genéricos Certificados 100 ML
+        </div>
+        <h1 class="hero-title">Elegancia de Lujo.<br>Tu Concentración Ideal.</h1>
+        <p class="hero-subtitle">Fragancias inspiradas de la más alta fidelidad técnica. Selecciona la intensidad perfecta para tu estilo de vida.</p>
+    </header>
+
+    <!-- Concentraciones/Precios FIGS Technical Style Neón -->
+    <section class="concentrations-grid">
+        <div class="conc-card">
+            <div class="conc-tag">Standard</div>
+            <div class="conc-name">Alta Concentración (100ml)</div>
+            <div class="conc-price">$22.00</div>
+            <div class="conc-bar-bg"><div class="conc-bar-fill" style="width: 50%;"></div></div>
+            <div class="conc-desc">50% de Esencia Pura. Ideal para uso diario.</div>
+        </div>
+
+        <div class="conc-card">
+            <div class="conc-tag">Popular</div>
+            <div class="conc-name">Doble Concentración (100ml)</div>
+            <div class="conc-price">$30.00</div>
+            <div class="conc-bar-bg"><div class="conc-bar-fill" style="width: 75%;"></div></div>
+            <div class="conc-desc">75% de Esencia Pura. Estela pronunciada.</div>
+        </div>
+
+        <div class="conc-card">
+            <div class="conc-tag">Intenso</div>
+            <div class="conc-name">Ultra Concentración (100ml)</div>
+            <div class="conc-price">$35.00</div>
+            <div class="conc-bar-bg"><div class="conc-bar-fill" style="width: 90%;"></div></div>
+            <div class="conc-desc">90% de Esencia Pura. Duración prolongada.</div>
+        </div>
+
+        <div class="conc-card">
+            <div class="conc-tag">Edición VIP</div>
+            <div class="conc-name">Máxima + Feromonas (100ml)</div>
+            <div class="conc-price">$45.00</div>
+            <div class="conc-bar-bg"><div class="conc-bar-fill" style="width: 100%;"></div></div>
+            <div class="conc-desc">100% Extracto de Perfume enriquecido con Feromonas. Proyección y atracción extrema.</div>
+        </div>
+    </section>
+
+    <!-- Buscador y Filtros -->
+    <section class="controls-section">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" class="search-input" placeholder="Buscar por perfume, marca o notas olfativas..." oninput="filterCatalog()">
+        </div>
+
+        <div class="filter-pills">
+            <button class="pill-btn active" onclick="setCategory('todos', this)">Todos</button>
+            <button class="pill-btn" onclick="setCategory('arabe', this)">✨ Árabes & Lujo</button>
+            <button class="pill-btn" onclick="setCategory('hombre', this)">💼 Hombre</button>
+            <button class="pill-btn" onclick="setCategory('mujer', this)">👑 Mujer</button>
+            <button class="pill-btn" onclick="setCategory('unisex', this)">⚡ Unisex</button>
+        </div>
+    </section>
+
+    <!-- Grid de Productos -->
+    <main class="catalog-grid" id="catalogGrid">
+        <!-- Se llena dinámicamente desde productos.js -->
+    </main>
+
+    <!-- Modal Registro/Login -->
+    <div class="modal-overlay" id="userModal">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeUserModal()"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div id="modalAuthView">
+                <h3 class="modal-title">Crea tu cuenta FRAGVYBE</h3>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px;">Regístrate con tu correo y recibe automáticamente tu código exclusivo del 10% OFF.</p>
+
+                <form id="registerForm" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" id="regFirstName" class="form-input" placeholder="Tu nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Apellido</label>
+                        <input type="text" id="regLastName" class="form-input" placeholder="Tu apellido" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Correo Electrónico</label>
+                        <input type="email" id="regEmail" class="form-input" placeholder="nombre@correo.com" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Registrarme y Obtener 10% OFF</button>
+                </form>
+            </div>
+
+            <div id="modalProfileView" style="display: none;">
+                <h3 class="modal-title">Mi Perfil</h3>
+                <p style="margin-bottom: 10px; font-size: 0.95rem;" id="profileName"></p>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 20px;" id="profileEmail"></p>
+                
+                <div style="background: rgba(5, 7, 14, 0.7); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 20px;">
+                    <p style="font-size: 0.8rem; color: var(--accent-cyan); font-weight: 700;">ESTADO DE REGISTRO</p>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Código de bienvenida enviado a tu correo.</p>
+                </div>
+
+                <button class="btn-submit" style="background: #ef4444; color: #fff;" onclick="handleLogout()">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drawer del Carrito -->
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h3 style="font-family: var(--font-title); font-size: 1.25rem;">Tu Carrito</h3>
+            <button class="modal-close" onclick="toggleCart()" style="position: static;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="cart-items-list" id="cartItemsList">
+            <!-- Items agregados dinámicamente -->
+        </div>
+
+        <div class="cart-footer">
+            <!-- Campo de Correo Electrónico en el Carrito -->
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label class="form-label" style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 700;">
+                    <i class="fa-regular fa-envelope"></i> TU CORREO ELECTRÓNICO
+                </label>
+                <input type="email" id="cartEmailInput" class="form-input" placeholder="nombre@correo.com" style="padding: 9px 12px; font-size: 0.85rem;">
+            </div>
+
+            <div class="coupon-box">
+                <input type="text" id="couponInput" class="form-input" placeholder="Código de descuento" style="text-transform: uppercase;">
+                <button onclick="applyCoupon()" class="btn-nav-action" style="background: var(--accent-cyan); color: #05070e; font-weight: 800;">Aplicar</button>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 6px;">
+                <span>Subtotal:</span>
+                <span id="cartSubtotal">$0.00</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 6px;">
+                <span>Descuento:</span>
+                <span id="cartDiscount" style="color: var(--accent-cyan);">-$0.00</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 12px;">
+                <span>Envío🇸🇻:</span>
+                <span>$2.50</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 800; border-top: 1px solid var(--border-color); padding-top: 12px; margin-bottom: 18px;">
+                <span>Total:</span>
+                <span id="cartTotal" style="color: var(--accent-cyan);">$2.50</span>
+            </div>
+
+            <button class="btn-whatsapp" onclick="checkoutWhatsApp()">
+                <i class="fa-brands fa-whatsapp" style="font-size: 1.2rem;"></i> Confirmar Pedido por WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Cargar base de datos externa de productos -->
+    <script src="productos.js"></script>
+<!-- Pie de página con Redes Sociales y Copyright -->
+<footer style="text-align: center; padding: 30px 20px; color: #94a3b8; font-size: 14px; border-top: 1px solid #1e293b; margin-top: 50px;">
+    
+    <!-- Enlaces a Redes Sociales -->
+    <div style="display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 18px;">
+        
+        <!-- Instagram -->
+        <a href="https://instagram.com/fragbyve.sv" target="_blank" style="color: #38bdf8; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; background: rgba(56, 189, 248, 0.1); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(56, 189, 248, 0.2);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            @fragbyve.sv
+        </a>
+
+        <!-- Facebook -->
+        <a href="https://facebook.com/FRAGVYBESV" target="_blank" style="color: #38bdf8; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; background: rgba(56, 189, 248, 0.1); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(56, 189, 248, 0.2);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+            FRAGVYBESV
+        </a>
+
+        <!-- WhatsApp -->
+        <a href="https://wa.me/50375874476" target="_blank" style="color: #4ade80; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; background: rgba(74, 222, 128, 0.1); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(74, 222, 128, 0.2);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            7587-4476
+        </a>
+
+    </div>
+
+    <!-- Copyright -->
+    <p style="margin: 0; font-size: 13px; color: #64748b;">&copy; 2026 FRAGVYBE. Todos los derechos reservados. TU ESENCIA, TU FLOW.</p>
+</footer>
+
+    <!-- Script de Funcionamiento -->
+    <script>
+        // CONFIGURACIÓN EMAILJS
+        const EMAILJS_PUBLIC_KEY = "Xjsw2bkqda7mv4mPE";
+        const EMAILJS_SERVICE_ID = "service_z4sgmno";
+        const EMAILJS_TEMPLATE_ID = "template_nh7nzuf";
+
+        try {
+            if (window.emailjs && EMAILJS_PUBLIC_KEY !== "TU_PUBLIC_KEY_AQUI") {
+                emailjs.init(EMAILJS_PUBLIC_KEY);
+            }
+        } catch(e) { console.log("EmailJS pendiente"); }
+
+        // Precios e Intensidades (Frascos 100ml)
+        const PRICES = { alta: 22, doble: 30, ultra: 35, maxima: 45 };
+        const PROMO_CODE = "FLOW10";
+        const SHIPPING_FEE = 2.50;
+        const WHATSAPP_NUM = "50375874476";
+
+    // Cargar desde productos.js si existe y adaptar los datos
+const rawSource = (typeof productos !== 'undefined') ? productos : ((typeof productosData !== 'undefined') ? productosData : []);
+const rawCatalog = rawSource.map(p => ({
+    id: p.id,
+    name: p.nombre || p.name || 'Sin Nombre',
+    brand: p.marca || p.brand || 'FRAGVYBE',
+    category: (p.genero || p.category || 'todos').toLowerCase(),
+    notes: p.tipo || p.notes || 'Fragancia exclusiva',
+    price: p.precio || p.price || 22
+}));
+        // Estado Global
+        let cart = [];
+        let activeCategory = 'todos';
+        let appliedDiscount = 0;
+        let currentUser = JSON.parse(localStorage.getItem('fragvybe_user')) || null;
+
+        window.onload = function() {
+            renderCatalog(rawCatalog);
+            updateUserUI();
+            updateCartUI();
+        };
+
+        function renderCatalog(items) {
+            const grid = document.getElementById('catalogGrid');
+            grid.innerHTML = '';
+
+            if (items.length === 0) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 40px;">Cargando catálogo o no se encontraron fragancias...</p>`;
+                return;
+            }
+
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div>
+                        <div class="card-brand">${item.brand || 'FRAGVYBE'}</div>
+                        <h3 class="card-name">${item.name}</h3>
+                        <p class="card-notes">${item.notes || 'Fragancia exclusiva'}</p>
+                    </div>
+
+                    <div>
+                        <div class="card-selector">
+                            <label class="selector-label">SELECCIONA CONCENTRACIÓN (100ML)</label>
+                            <select class="select-custom" id="select-${item.id}" onchange="updateCardPrice(${item.id})">
+                                <option value="alta">Alta Concentración 100ml (50%) - $22.00</option>
+                                <option value="doble">Doble Concentración 100ml (75%) - $30.00</option>
+                                <option value="ultra">Ultra Concentración 100ml (90%) - $35.00</option>
+                                <option value="maxima">Máxima Concentración + Feromonas 100ml (100%) - $45.00</option>
+</select>
+                </div>
+
+                <!-- CASILLA DE FEROMONAS (AGREGAR AQUÍ) -->
+                <div style="margin: 10px 0; font-size: 13px; text-align: left;">
+                    <label style="cursor: pointer; display: flex; align-items: center; gap: 6px; color: #cbd5e1;">
+                        <input type="checkbox" id="fero-${item.id}" style="accent-color: #06b6d4;">
+                        <span>+ Feromonas (+$3.00)</span>
+                    </label>
+                </div>
+
+                <div class="card-footer">
+                    <div class="card-price" id="price-${item.id}">$22.00</div>
+                    <button class="btn-add-cart" onclick="addToCart(${item.id})">
+                        <i class="fa-solid fa-plus"></i> Agregar
+                    </button>
+                </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function updateCardPrice(itemId) {
+            const select = document.getElementById(`select-${itemId}`);
+            const priceTag = document.getElementById(`price-${itemId}`);
+            priceTag.innerText = `$${PRICES[select.value]}.00`;
+        }
+
+function filterCatalog() {
+    const searchInput = document.getElementById('searchInput');
+    const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+    // Marcas y términos populares de perfumería árabe y de lujo
+    const marcasArabes = ['lattafa', 'armaf', 'afnan', 'rasasi', 'orientica', 'bharara', 'maison alhambra', 'asdaaf', 'club de nuit', 'al haramain', 'zoha', 'fragrance world', 'lujo'];
+
+    const filtered = rawCatalog.filter(item => {
+        // Normaliza texto y evalúa propiedades tanto en inglés como en español
+        const itemCat = ((item.category || item.categoria || item.gender || item.genero || '') + '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const itemBrand = (item.brand || item.marca || '').toLowerCase();
+        const itemName = (item.name || item.nombre || '').toLowerCase();
+        
+        const selectedCat = (activeCategory || 'todos').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+        let matchesCategory = false;
+
+        if (selectedCat === 'todos') {
+            matchesCategory = true;
+        } else if (selectedCat === 'arabe') {
+            // Detecta si en categoría dice 'arab'/'lujo' O si la marca/nombre es de origen árabe
+            const esMarcaArabe = marcasArabes.some(m => itemBrand.includes(m) || itemName.includes(m));
+            matchesCategory = itemCat.includes('arab') || itemCat.includes('lujo') || esMarcaArabe;
+        } else {
+            matchesCategory = itemCat.includes(selectedCat);
+        }
+
+        const matchesSearch = !query || 
+            itemName.includes(query) ||
+            itemBrand.includes(query) ||
+            (item.notes && item.notes.toLowerCase().includes(query));
+
+        return matchesCategory && matchesSearch;
+    });
+
+    renderCatalog(filtered);
+}
+
+        function setCategory(category, element) {
+            activeCategory = category;
+            document.querySelectorAll('.pill-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            filterCatalog();
+        }
+
+function addToCart(itemId) {
+    const item = rawCatalog.find(p => p.id === itemId);
+    if (!item) return;
+
+    const select = document.getElementById(`select-${itemId}`);
+    const selectedConc = select ? select.value : '100ml';
+
+    // Verificar si activó la casilla de feromonas
+    const feroCheck = document.getElementById(`fero-${itemId}`);
+    const conFeromonas = feroCheck ? feroCheck.checked : false;
+
+    const extraPrice = conFeromonas ? 3 : 0;
+    const finalName = conFeromonas ? `${item.name} (+ Feromonas)` : item.name;
+    const basePrice = (typeof PRICES !== 'undefined' && PRICES[selectedConc]) ? PRICES[selectedConc] : (item.price || 22);
+
+    cart.push({
+        id: item.id,
+        name: finalName,
+        brand: item.brand || 'FRAGVYBE',
+        concKey: selectedConc,
+        concName: select ? select.options[select.selectedIndex].text.split('-')[0].trim() : '100ml',
+        price: basePrice + extraPrice
+    });
+
+    updateCartUI();
+    if (typeof confetti === 'function') confetti({ particleCount: 35, spread: 50, origin: { y: 0.7 } });
+}
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cartCount').innerText = cart.length;
+            const cartList = document.getElementById('cartItemsList');
+            cartList.innerHTML = '';
+
+            let subtotal = 0;
+            cart.forEach((item, index) => {
+                subtotal += item.price;
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <div>
+                        <div class="cart-item-title">${item.name}</div>
+                        <div class="cart-item-meta">${item.brand} • ${item.concName}</div>
+                        <div style="font-weight: 700; color: var(--accent-cyan); font-size: 0.85rem; margin-top: 2px;">$${item.price}.00</div>
+                    </div>
+                    <button onclick="removeFromCart(${index})" style="background:none; border:none; color: #ef4444; cursor:pointer;"><i class="fa-solid fa-trash-can"></i></button>
+                `;
+                cartList.appendChild(div);
+            });
+
+            const discountAmount = subtotal * appliedDiscount;
+            const total = Math.max(0, subtotal - discountAmount) + (cart.length > 0 ? SHIPPING_FEE : 0);
+
+            document.getElementById('cartSubtotal').innerText = `$${subtotal.toFixed(2)}`;
+            document.getElementById('cartDiscount').innerText = `-$${discountAmount.toFixed(2)}`;
+            document.getElementById('cartTotal').innerText = `$${total.toFixed(2)}`;
+            
+            if (currentUser && document.getElementById('cartEmailInput')) {
+                document.getElementById('cartEmailInput').value = currentUser.email;
+            }
+        }
+
+        function toggleCart() {
+            document.getElementById('cartDrawer').classList.toggle('active');
+        }
+
+        function applyCoupon() {
+            const input = document.getElementById('couponInput').value.trim().toUpperCase();
+            if (input === PROMO_CODE) {
+                appliedDiscount = 0.10;
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Descuento del 10% Aplicado!',
+                    text: 'Se ha aplicado el cupón FLOW10 a tu pedido.',
+                    confirmButtonColor: '#0284c7'
+                });
+                updateCartUI();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Código Inválido',
+                    text: 'Por favor verifica el código ingresado.',
+                    confirmButtonColor: '#0284c7'
+                });
+            }
+        }
+
+async function checkoutWhatsApp() {
+    if (cart.length === 0) {
+        Swal.fire({ icon: 'warning', title: 'Carrito Vacío', text: 'Agrega al menos una fragancia para hacer tu pedido.' });
+        return;
+    }
+
+    const cartEmail = document.getElementById('cartEmailInput')?.value.trim();
+    const emailCliente = cartEmail || (currentUser ? currentUser.email : 'No proporcionado');
+
+    // Cuadro emergente personalizado y estilizado
+    const { value: formValues } = await Swal.fire({
+        title: '🛍️ DATOS DE ENTREGA',
+        background: '#0f172a',
+        color: '#f8fafc',
+        confirmButtonColor: '#06b6d4',
+        confirmButtonText: '🚀 Confirmar y Enviar a WhatsApp',
+        cancelButtonText: 'Cancelar',
+        showCancelButton: true,
+        focusConfirm: false,
+        html: `
+            <div style="text-align: left; display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+                <div>
+                    <label style="font-size: 12px; color: #94a3b8; font-weight: bold; display: block; margin-bottom: 4px;">NOMBRE COMPLETO *</label>
+                    <input id="swal-nombre" class="swal2-input" placeholder="Ej. Juan Enrique Moreno Marin" style="width: 100%; margin: 0; background: #1e293b; color: #fff; border: 1px solid #334155; border-radius: 8px; padding: 10px; box-sizing: border-box;">
+                </div>
+                <div>
+                    <label style="font-size: 12px; color: #94a3b8; font-weight: bold; display: block; margin-bottom: 4px;">TELÉFONO / WHATSAPP *</label>
+                    <input id="swal-telefono" type="tel" class="swal2-input" placeholder="Ej. 667689XX" style="width: 100%; margin: 0; background: #1e293b; color: #fff; border: 1px solid #334155; border-radius: 8px; padding: 10px; box-sizing: border-box;">
+                </div>
+                <div>
+                    <label style="font-size: 12px; color: #94a3b8; font-weight: bold; display: block; margin-bottom: 4px;">DIRECCIÓN EXACTA DE ENTREGA *</label>
+                    <textarea id="swal-direccion" class="swal2-textarea" placeholder="Colonia, calle, municipio o punto de referencia..." style="width: 100%; margin: 0; background: #1e293b; color: #fff; border: 1px solid #334155; border-radius: 8px; padding: 10px; height: 75px; resize: none; box-sizing: border-box;"></textarea>
+                </div>
+            </div>
+        `,
+        preConfirm: () => {
+            const nombre = document.getElementById('swal-nombre').value.trim();
+            const telefono = document.getElementById('swal-telefono').value.trim();
+            const direccion = document.getElementById('swal-direccion').value.trim();
+
+            if (!nombre || !telefono || !direccion) {
+                Swal.showValidationMessage('⚠️ Por favor completa todos los campos obligatorios');
+                return false;
+            }
+            return { nombre, telefono, direccion };
+        }
+    });
+
+    if (!formValues) return;
+
+    const { nombre, telefono, direccion } = formValues;
+
+    // Construcción del mensaje final para WhatsApp
+    let text = `*¡Hola FRAGVYBE! Quisiera realizar el siguiente pedido:*\n\n`;
+    text += `👤 *Cliente:* ${nombre}\n`;
+    text += `📞 *Teléfono:* ${telefono}\n`;
+    text += `📍 *Dirección:* ${direccion}\n`;
+    text += `📧 *Correo:* ${emailCliente}\n\n`;
+    text += `🛍️ *DETALLE DEL PEDIDO:*\n`;
+
+    cart.forEach((item, i) => {
+        text += `${i + 1}. *${item.name}* (${item.brand}) - ${item.concName || '100ml'} | $${item.price.toFixed(2)}\n`;
+    });
+
+    const subtotal = cart.reduce((acc, curr) => acc + curr.price, 0);
+    const discountAmount = subtotal * appliedDiscount;
+    const total = (subtotal - discountAmount) + SHIPPING_FEE;
+
+    if (appliedDiscount > 0) text += `\n*Descuento Aplicado:* -$${discountAmount.toFixed(2)}`;
+    text += `\n*Envío a Domicilio:* $${SHIPPING_FEE.toFixed(2)}`;
+    text += `\n💵 *TOTAL A PAGAR:* $${total.toFixed(2)}`;
+
+    // Número configurado con tu WhatsApp (El Salvador 50375874476)
+    const numeroWhatsApp = "50375874476"; 
+    window.open(`https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(text)}`, '_blank');
+}
+    
+
+        function openUserModal() { document.getElementById('userModal').classList.add('active'); }
+        function closeUserModal() { document.getElementById('userModal').classList.remove('active'); }
+
+        function updateUserUI() {
+            if (currentUser) {
+                document.getElementById('userBtnText').innerText = `Hola, ${currentUser.firstName}`;
+                document.getElementById('modalAuthView').style.display = 'none';
+                document.getElementById('modalProfileView').style.display = 'block';
+                document.getElementById('profileName').innerText = `${currentUser.firstName} ${currentUser.lastName}`;
+                document.getElementById('profileEmail').innerText = currentUser.email;
+                if (document.getElementById('cartEmailInput')) {
+                    document.getElementById('cartEmailInput').value = currentUser.email;
+                }
+            } else {
+                document.getElementById('userBtnText').innerText = 'Mi Cuenta';
+                document.getElementById('modalAuthView').style.display = 'block';
+                document.getElementById('modalProfileView').style.display = 'none';
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const firstName = document.getElementById('regFirstName').value.trim();
+            const lastName = document.getElementById('regLastName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+
+            currentUser = { firstName, lastName, email };
+            localStorage.setItem('fragvybe_user', JSON.stringify(currentUser));
+            updateUserUI();
+
+            try {
+                if (window.emailjs && EMAILJS_PUBLIC_KEY !== "TU_PUBLIC_KEY_AQUI") {
+                    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                        to_email: email,
+                        to_name: `${firstName} ${lastName}`,
+                        coupon_code: PROMO_CODE
+                    });
+                }
+            } catch(err) { console.log("Envío EmailJS pendiente"); }
+
+            closeUserModal();
+
+            Swal.fire({
+                icon: 'success',
+                title: '¡Cuenta Creada Exitosamente!',
+                html: `
+                    <p style="font-size: 15px; color: #cbd5e1; margin-bottom: 15px;">
+                        Hemos enviado tu código exclusivo de <b>10% OFF</b> a:<br>
+                        <strong style="color: #00f0ff;">${email}</strong>
+                    </p>
+
+                    <div style="background-color: rgba(5, 7, 14, 0.8); border: 1px solid #1e293b; padding: 14px; border-radius: 10px; margin: 15px 0; text-align: left;">
+                        <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8fafc;">
+                            📩 <b>Revisa tu correo para obtener tu código.</b>
+                        </p>
+                        <p style="margin: 0; font-size: 13px; color: #fbbf24;">
+                            ⚠️ <b>IMPORTANTE:</b> Si no lo encuentras en tu bandeja principal, revisa tu carpeta de <b>SPAM / Correo no deseado</b>.
+                        </p>
+                    </div>
+                `,
+                confirmButtonText: 'Entendido, ir a revisar mi correo',
+                confirmButtonColor: '#0284c7'
+            });
+
+            if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('fragvybe_user');
+            currentUser = null;
+            updateUserUI();
+            closeUserModal();
+        }
+    </script>
+</body>
+</html>
